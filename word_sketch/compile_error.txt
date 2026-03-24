@@ -1,0 +1,9 @@
+** (File.Error) could not remove files and directories recursively from "c:/Desktop/wordsketchh/word_sketch/word_sketch/_build/dev/lib/file_system": permission denied
+    (elixir 1.17.2) lib/file.ex:1388: File.rm_rf!/1
+    (mix 1.17.2) lib/mix/tasks/deps.compile.ex:79: anonymous fn/4 in Mix.Tasks.Deps.Compile.compile/2
+    (elixir 1.17.2) lib/enum.ex:1703: Enum."-map/2-lists^map/1-1-"/2
+    (mix 1.17.2) lib/mix/tasks/deps.compile.ex:77: Mix.Tasks.Deps.Compile.compile/2
+    (mix 1.17.2) lib/mix/tasks/deps.loadpaths.ex:87: Mix.Tasks.Deps.Loadpaths.deps_check/2
+    (mix 1.17.2) lib/mix/tasks/deps.loadpaths.ex:48: Mix.Tasks.Deps.Loadpaths.run/1
+    (mix 1.17.2) lib/mix/task.ex:495: anonymous fn/3 in Mix.Task.run_task/5
+    (mix 1.17.2) lib/mix/tasks/loadpaths.ex:37: Mix.Tasks.Loadpaths.run/1
