@@ -9,6 +9,8 @@ defmodule WordSketch.Application do
   def start(_type, _args) do
     children = [
       {Registry, keys: :unique, name: WordSketch.TimerRegistry},
+      {Registry, keys: :unique, name: WordSketch.GameRegistry},
+      {DynamicSupervisor, name: WordSketch.GameSupervisor, strategy: :one_for_one},
       WordSketchWeb.Telemetry,
       WordSketch.Repo,
       {DNSCluster, query: Application.get_env(:word_sketch, :dns_cluster_query) || :ignore},

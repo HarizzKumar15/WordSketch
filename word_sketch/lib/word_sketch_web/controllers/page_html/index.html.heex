@@ -1,32 +1,254 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Home Page</title>
-    <link rel="stylesheet" href={~p"/css/index.css"}>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Welcome to Word Sketch!</h1>
-      
-      <div class="form-group">
-        <label for="name">Enter Your Name:</label>
-        <input type="text" id="name" class="form-control" placeholder="What's your name?" required />
-      </div>
-      <div class="buttons">
-        <button id="create-room" class="btn btn-primary">Create Private Room</button>
-      </div>
-      <br>
-      <div class="form-group">
-        <label for="room-code">Enter Room Code:</label>
-        <input type="text" id="roomcode" class="form-control" placeholder="Enter room code" />
-      </div>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WordSketch – Landing</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --bg: #f0eeff;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --dark: #1a1a2e;
+    --panel: #ffffff;
+    --muted: #8b8aaa;
+    --green: #2dd4bf;
+    --yellow: #fbbf24;
+  }
+  body {
+    font-family:'Nunito',sans-serif;
+    background: var(--bg);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    position:relative;
+  }
 
-      <div class="buttons">
-        <button id="start-game" class="btn btn-secondary">Join Game</button>
-      </div>
+  /* Background blobs */
+  .blob {
+    position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:0;
+  }
+  .b1 { width:480px; height:480px; background:rgba(108,99,255,.22); top:-120px; left:-100px; }
+  .b2 { width:360px; height:360px; background:rgba(255,101,132,.18); bottom:-80px; right:-60px; }
+  .b3 { width:200px; height:200px; background:rgba(45,212,191,.15); top:50%; left:70%; }
+
+  /* Floating doodles */
+  .doodle {
+    position:absolute; pointer-events:none; z-index:0; opacity:.15;
+  }
+  .d1 { top:8%; left:5%; font-size:3rem; transform:rotate(-15deg); }
+  .d2 { top:15%; right:8%; font-size:2.2rem; transform:rotate(20deg); }
+  .d3 { bottom:12%; left:8%; font-size:2.5rem; transform:rotate(10deg); }
+  .d4 { bottom:20%; right:6%; font-size:2rem; transform:rotate(-20deg); }
+
+  /* Main card */
+  .card {
+    position:relative; z-index:1;
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(108,99,255,.2);
+    border-radius:28px;
+    padding:48px 44px 40px;
+    width:460px;
+    box-shadow:
+      0 0 0 1px rgba(108,99,255,.08),
+      0 24px 64px rgba(108,99,255,.18),
+      0 4px 16px rgba(0,0,0,.06);
+  }
+
+  /* Logo */
+  .logo-wrap { text-align:center; margin-bottom:32px; }
+  .logo-icon-big {
+    width:68px; height:68px; background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border-radius:20px; display:inline-flex; align-items:center; justify-content:center;
+    font-size:2rem; margin-bottom:12px;
+    box-shadow:0 8px 24px rgba(108,99,255,.35);
+  }
+  .logo-title {
+    font-size:2.4rem; font-weight:900; color:var(--dark); letter-spacing:-1px; line-height:1;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .logo-sub {
+    font-size:.9rem; color:var(--muted); margin-top:6px; font-weight:600;
+  }
+
+  /* Divider */
+  .divider {
+    height:1px; background:linear-gradient(90deg,transparent,rgba(108,99,255,.3),transparent);
+    margin:28px 0;
+  }
+
+  /* Form */
+  .field-label { font-size:.72rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .text-input {
+    width:100%; padding:14px 18px; border-radius:14px;
+    border:2px solid rgba(108,99,255,.2); background:#f8f7ff;
+    font-family:'Nunito',sans-serif; font-size:1rem; font-weight:700; color:var(--dark);
+    outline:none; transition:border-color .2s;
+    margin-bottom:16px;
+  }
+  .text-input:focus { border-color:var(--accent); background:#fff; }
+  .text-input::placeholder { color:#c4c2dd; font-weight:600; }
+
+  .btn-primary {
+    width:100%; padding:16px; border-radius:14px;
+    background:linear-gradient(135deg,var(--accent),#8b80ff);
+    border:none; color:#fff; font-family:'Nunito',sans-serif;
+    font-size:1.05rem; font-weight:900; cursor:pointer;
+    box-shadow:0 6px 20px rgba(108,99,255,.4);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:transform .15s, box-shadow .15s;
+    margin-bottom:20px;
+  }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 10px 28px rgba(108,99,255,.5); }
+
+  .or-divider {
+    display:flex; align-items:center; gap:12px; margin-bottom:20px;
+    font-size:.75rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--muted);
+  }
+  .or-divider::before, .or-divider::after {
+    content:''; flex:1; height:1px; background:rgba(108,99,255,.15);
+  }
+
+  .join-row { display:flex; gap:10px; }
+  .room-input {
+    flex:1; padding:14px 18px; border-radius:14px;
+    border:2px solid rgba(108,99,255,.15); background:#f8f7ff;
+    font-family:'Space Mono',monospace; font-size:.95rem; font-weight:700;
+    color:var(--dark); outline:none; letter-spacing:3px;
+    text-transform:uppercase; transition:border-color .2s;
+  }
+  .room-input:focus { border-color:var(--accent); background:#fff; }
+  .room-input::placeholder { color:#c4c2dd; letter-spacing:2px; font-size:.8rem; font-family:'Nunito',sans-serif; }
+
+  .btn-join {
+    padding:14px 22px; border-radius:14px;
+    background:var(--dark); border:none; color:#fff;
+    font-family:'Nunito',sans-serif; font-size:1rem; font-weight:900; cursor:pointer;
+    box-shadow:0 4px 12px rgba(0,0,0,.18); transition:transform .15s;
+    white-space:nowrap;
+  }
+  .btn-join:hover { transform:translateY(-1px); }
+
+  /* Features row */
+  .features {
+    display:flex; gap:10px; margin-top:28px;
+  }
+  .feat {
+    flex:1; background:linear-gradient(135deg,rgba(108,99,255,.07),rgba(255,101,132,.05));
+    border:1px solid rgba(108,99,255,.12); border-radius:14px;
+    padding:12px 10px; text-align:center;
+  }
+  .feat-icon { font-size:1.4rem; margin-bottom:4px; }
+  .feat-label { font-size:.72rem; font-weight:800; color:var(--muted); letter-spacing:.5px; }
+</style>
+</head>
+<body>
+
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<span class="doodle d1">🎨</span>
+<span class="doodle d2">✏️</span>
+<span class="doodle d3">🖼️</span>
+<span class="doodle d4">💡</span>
+
+<div class="card">
+  <div class="logo-wrap">
+    <div class="logo-icon-big">✏️</div>
+    <div class="logo-title">WordSketch</div>
+    <div class="logo-sub">Draw, guess, and win in real-time!</div>
+  </div>
+
+  <div class="field-label">Your Name</div>
+  <input id="name" class="text-input" type="text" placeholder="Enter your name…" value="" autocomplete="off"/>
+
+  <button id="create-room" class="btn-primary">
+    <span>+</span> Create Private Room
+  </button>
+
+  <div class="or-divider">or join existing</div>
+
+  <div class="join-row">
+    <input id="roomcode" class="room-input" type="text" placeholder="6-LETTER CODE" maxlength="6" autocomplete="off" style="text-transform: uppercase;" />
+    <button id="start-game" class="btn-join">Join →</button>
+  </div>
+
+  <div class="features">
+    <div class="feat">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-label">Real-time</div>
     </div>
-    <script **src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script type="module" src={~p"/assets/js/socket.js"}></script>
-  </body>
+    <div class="feat">
+      <div class="feat-icon">🏆</div>
+      <div class="feat-label">Leaderboard</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🎭</div>
+      <div class="feat-label">Custom Words</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">👥</div>
+      <div class="feat-label">Multiplayer</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btnCreate = document.getElementById("create-room");
+    const btnJoin = document.getElementById("start-game");
+    const inputName = document.getElementById("name");
+    const inputRoom = document.getElementById("roomcode");
+
+    function generateRoomCode() {
+      return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    function handleGo(isCreating) {
+      const name = inputName.value.trim();
+      if (!name) {
+        alert("Please enter a nickname first!");
+        inputName.focus();
+        return;
+      }
+      
+      let roomCode = inputRoom.value.trim().toUpperCase();
+      
+      if (isCreating) {
+        roomCode = generateRoomCode();
+        sessionStorage.setItem("user_role", "creator");
+      } else {
+        sessionStorage.setItem("user_role", "player");
+      }
+      
+      if (!roomCode || roomCode.length < 3) {
+        alert("Please enter a valid room code.");
+        inputRoom.focus();
+        return;
+      }
+
+      sessionStorage.setItem("user_id", name);
+      sessionStorage.setItem("room_id", roomCode);
+      
+      window.location.href = "/room:" + roomCode;
+    }
+
+    btnCreate.addEventListener("click", () => handleGo(true));
+    btnJoin.addEventListener("click", () => handleGo(false));
+    
+    inputRoom.addEventListener("keypress", (e) => {
+      if(e.key === "Enter") handleGo(false);
+    });
+  });
+</script>
+
+</body>
 </html>

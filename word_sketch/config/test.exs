@@ -7,7 +7,7 @@ import Config
 # Run `mix help test` for more information.
 config :word_sketch, WordSketch.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "harishkumarrvk15",
   hostname: "localhost",
   database: "word_sketch_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
