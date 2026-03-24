@@ -4,3 +4,4 @@ otp_win64_27.0.exe
 elixir.zip
 _build/
 deps/
+*:Zone.Identifier
